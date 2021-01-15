@@ -1,24 +1,48 @@
-import logo from './logo.svg';
-import './App.css';
+import React, {useEffect, useState} from 'react';
+import { Col, Container, Row } from 'react-bootstrap';
+import CardPersona from './components/cardPersona/cardPersona';
+import clienteAxios from './config/axios';
 
-function App() {
+
+const App = () => {
+
+  const [usuarios, guardarUsuarios] = useState([]);
+
+
+  useEffect( () => {
+    fetchDataUsuarios();
+  },
+  []
+  )
+
+  const fetchDataUsuarios = async () =>{
+    try {
+      const datos = await clienteAxios.get('/users');
+      let usuarios = datos.data
+      
+      guardarUsuarios(usuarios)
+      
+    } catch (error) {
+      
+    }
+
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+
+    <Container fluid>
+      <Row>
+        <Col xs={12} >
+          <h1 className="text-center mb-4 mt-4">Componentes funcionales en React.</h1>
+        </Col>
+      </Row>
+      <Row>
+        {
+          usuarios && usuarios.length > 0 && 
+            usuarios.map( (usuario,index ) => <CardPersona key={index} usuario={usuario}/> )
+        }
+      </Row>
+      </Container>
   );
 }
 
